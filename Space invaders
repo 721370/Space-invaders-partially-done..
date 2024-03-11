@@ -1,0 +1,88 @@
+import pygame
+
+pygame.init()
+pygame.display.set_caption("Space invaders!")
+screen = pygame.display.set_mode((800, 800))
+clock = pygame.time.Clock()
+gameover = False
+#Player
+timer = 0;
+xpos = 400
+ypos = 750
+moveLeft = False
+moveRight = False
+class Alien:
+    def move(self):
+        if timer%100==0:
+            self.xpos+=50
+            self.xpos-=50
+            print("Dancing")
+    def __init__(self, xpos, ypos):
+        self.xpos = xpos
+        self.ypos = ypos
+        self.isAlive = True
+    def draw(self):
+        pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 40, 40))
+       
+Bob = []
+for i in range (4):
+    for j in range (12):
+        Bob.append(Alien(j*60+50, i*80+50))
+while not gameover: #game loooop
+    clock.tick(60)
+    #input whoooo
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            gameover = True#Quit game
+       
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT:
+            xpos-=5
+            moveLeft = True
+               
+    elif event.type == pygame.KEYUP:
+        if event.key == pygame.K_LEFT:
+            moveLeft = False
+           
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_RIGHT:
+            xpos+=5
+            moveRight = True
+               
+    elif event.type == pygame.KEYUP:
+        if event.key == pygame.K_RIGHT:
+            moveRight = False
+               
+    #Physics section----------------------------------------------
+   
+    #check variables input
+    if moveLeft == True:
+        vx =- 3
+    else:
+        vx = 0
+   
+    if moveRight == True:
+        vx = 3
+    else:
+        vx = 0
+       
+    for i in range (len(Bob)):
+        Bob[i].move()
+       
+    #update player position
+    xpos += vx
+   
+    #Render section----------------------------------------------------
+   
+    screen.fill((0,0,0)) #wipe screen
+    for i in range (len(Bob)):
+        Bob[i].draw()
+    pygame.draw.rect(screen, (0, 250, 0), (xpos, 750, 60, 20)) #Player
+    pygame.draw.rect(screen, (0, 250, 0), (xpos+10, 745, 40, 20))
+    pygame.draw.rect(screen, (0, 250, 0), (xpos+25, 730, 10, 30))
+
+    pygame.display.flip() #Flips buffer
+
+#End game loop
+
+pygame.quit()
