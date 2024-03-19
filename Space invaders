@@ -6,40 +6,45 @@ screen = pygame.display.set_mode((800, 800))
 clock = pygame.time.Clock()
 gameover = False
 #Player
-timer = 1;
+timer = 0
 xpos = 400
 ypos = 750
 moveLeft = False
 moveRight = False
 #classes
-class direction:
-    def __init__(self, time):
+class Bullet:
+    def __init__(self, xpos, ypos):
         self.xpos = xpos
         self.ypos = ypos
-        self.isAlive = True
-        self.direction = 1
+        self.isAlive = False
+        
+    def move(self, xpos, ypos):
+        if self.isAlive == True: #Shoots only norm bullets
+            self.ypos-=5 #move up when shot
+        if self.ypos < 0: #Check if hit
+            self.isAlive = False #ded 
+            self.xpos = xpos #Resets player pos
+            self.ypos = ypos
 
 class Alien:
-    def move(self, time):
-
-        #reset direction :D
-        if timer%800 ==0:
-            self.xpos +=100
-            self.direction *=-1 #Flips
-            return 0 #reset
-        
-    #move every time the timer increases by 100
-    if time % 100 == 0:
-        self.xpos+=50*self.drection #move right
-    
-    return time
-
     def __init__(self, xpos, ypos):
         self.xpos = xpos
         self.ypos = ypos
         self.isAlive = True
+        self.direction = 1
     def draw(self):
         pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 40, 40))
+    
+    def move(self, time):
+        if time % 800 == 0:
+            self.ypos += 100
+            self.direction *=-1
+            return 0
+        
+        if time % 100 == 0:
+            self.xpos+=50*self.direction
+        return time
+
 
 Bob = []
 for i in range (4):
@@ -48,6 +53,7 @@ for i in range (4):
         
 while not gameover: #game loooop
     clock.tick(60)
+    timer +=1
     #input whoooo
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -89,9 +95,21 @@ while not gameover: #game loooop
     #update player position
     xpos += vx
 
+    if shoot  == True:
+        bullet.isAlive = True
+    
+    if bullet.isAlive == True:
+        bullet.move(xpos+28, ypos)
+
+    else: #Make bullet follow player
+        bullet.xpos = xpos + 28
+        bullet.ypos = ypos
+
     #Render section----------------------------------------------------
 
     screen.fill((0,0,0)) #wipe screen
+    for i in range (len(Bullet)):
+        Bullet[i].draw()    
     for i in range (len(Bob)):
         Bob[i].draw()
     pygame.draw.rect(screen, (0, 250, 0), (xpos, 750, 60, 20)) #Player
