@@ -20,9 +20,19 @@ class direction:
         self.direction = 1
 
 class Alien:
-    def move(self):
-        if timer%100==0:
-            self.xpos+=50
+    def move(self, time):
+
+        #reset direction :D
+        if timer%800 ==0:
+            self.xpos +=100
+            self.direction *=-1 #Flips
+            return 0 #reset
+        
+    #move every time the timer increases by 100
+    if time % 100 == 0:
+        self.xpos+=50*self.drection #move right
+    
+    return time
 
     def __init__(self, xpos, ypos):
         self.xpos = xpos
@@ -63,7 +73,7 @@ while not gameover: #game loooop
 
     #Physics section----------------------------------------------
     for i in range (len(Bob)):
-        Bob[i].move()
+        timer = Bob[i].move(timer)
 
     #check variables input
     if moveLeft == True:
@@ -75,9 +85,6 @@ while not gameover: #game loooop
         vx = 3
     else:
         vx = 0
-
-    for i in range (len(Bob)):
-        Bob[i].move()
 
     #update player position
     xpos += vx
