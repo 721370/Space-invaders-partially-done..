@@ -11,6 +11,7 @@ xpos = 400
 ypos = 750
 moveLeft = False
 moveRight = False
+shoot = False
 #classes
 class Bullet:
     def __init__(self, xpos, ypos):
@@ -25,6 +26,11 @@ class Bullet:
             self.isAlive = False #ded 
             self.xpos = xpos #Resets player pos
             self.ypos = ypos
+
+    def draw(self):
+        pygame.draw.rect(screen, (250,250,250), (self.xpos, self.ypos,3, 20))
+
+bullet = Bullet(xpos+28, ypos)#create bullet
 
 class Alien:
     def __init__(self, xpos, ypos):
@@ -77,9 +83,27 @@ while not gameover: #game loooop
         if event.key == pygame.K_RIGHT:
             moveRight = False
 
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_e:
+            shoot = True
+
+    elif event.type == pygame.KEYUP:
+        if event.key == pygame.K_e:
+            shoot = False   
+ 
     #Physics section----------------------------------------------
     for i in range (len(Bob)):
         timer = Bob[i].move(timer)
+
+    if shoot  == True:
+        bullet.isAlive = True
+    
+    if bullet.isAlive == True:
+        bullet.move(xpos+28, ypos)
+
+    else: #Make bullet follow player
+        bullet.xpos = xpos + 28
+        bullet.ypos = ypos
 
     #check variables input
     if moveLeft == True:
@@ -95,21 +119,11 @@ while not gameover: #game loooop
     #update player position
     xpos += vx
 
-    if shoot  == True:
-        bullet.isAlive = True
-    
-    if bullet.isAlive == True:
-        bullet.move(xpos+28, ypos)
-
-    else: #Make bullet follow player
-        bullet.xpos = xpos + 28
-        bullet.ypos = ypos
-
     #Render section----------------------------------------------------
 
     screen.fill((0,0,0)) #wipe screen
-    for i in range (len(Bullet)):
-        Bullet[i].draw()    
+    #for i in range (bullet):
+    bullet.draw()    
     for i in range (len(Bob)):
         Bob[i].draw()
     pygame.draw.rect(screen, (0, 250, 0), (xpos, 750, 60, 20)) #Player
