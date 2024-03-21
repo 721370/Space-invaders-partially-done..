@@ -63,34 +63,33 @@ while not gameover: #game loooop
     #input whoooo
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            gameover = True#Quit game
+            gameover = True   #Quit game
 
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
-            xpos-=5
-            moveLeft = True
 
-    elif event.type == pygame.KEYUP:
-        if event.key == pygame.K_LEFT:
-            moveLeft = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                moveRight = True
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                moveLeft = True
 
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_RIGHT:
-            xpos+=5
-            moveRight = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_RIGHT:
+                moveRight = False
 
-    elif event.type == pygame.KEYUP:
-        if event.key == pygame.K_RIGHT:
-            moveRight = False
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                moveLeft = False
 
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_e:
-            shoot = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                shoot = True
 
-    elif event.type == pygame.KEYUP:
-        if event.key == pygame.K_e:
-            shoot = False   
- 
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                shoot = False   
+    
     #Physics section----------------------------------------------
     for i in range (len(Bob)):
         timer = Bob[i].move(timer)
@@ -108,11 +107,9 @@ while not gameover: #game loooop
     #check variables input
     if moveLeft == True:
         vx =- 3
-    else:
-        vx = 0
 
-    if moveRight == True:
-        vx = 3
+    elif moveRight == True:
+        vx =+ 3
     else:
         vx = 0
 
