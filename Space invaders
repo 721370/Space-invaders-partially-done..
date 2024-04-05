@@ -9,9 +9,12 @@ gameover = False
 timer = 0
 xpos = 400
 ypos = 750
+numhits = 0
+isDead = False
 moveLeft = False
 moveRight = False
 shoot = False
+
 #classes
 class Bullet:
     def __init__(self, xpos, ypos):
@@ -39,7 +42,8 @@ class Alien:
         self.isAlive = True
         self.direction = 1
     def draw(self):
-        pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 40, 40))
+        if self.isAlive:
+            pygame.draw.rect(screen, (250, 250, 250), (self.xpos, self.ypos, 40, 40))
     
     def move(self, time):
         if time % 800 == 0:
@@ -50,6 +54,16 @@ class Alien:
         if time % 100 == 0:
             self.xpos+=50*self.direction
         return time
+    
+    def collide(self, bx, by):
+        if not self.isAlive:
+            if (bx + 40 > self.xpos and
+                bx < self.xpos + 100 and
+                by + 40 > self.ypos and
+                by < self.ypos + 50):
+                self.isAlive = True
+                return True
+        return False
 
 
 Bob = []
@@ -106,10 +120,10 @@ while not gameover: #game loooop
 
     #check variables input
     if moveLeft == True:
-        vx =- 3
+        vx =- 5
 
     elif moveRight == True:
-        vx =+ 3
+        vx =+ 5
     else:
         vx = 0
 
